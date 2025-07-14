@@ -1,7 +1,8 @@
 <html>
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script type="importmap">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script type="importmap">
       {
         "imports": {
           "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
@@ -10,14 +11,28 @@
         }
       }
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <link rel="stylesheet" href="style.css">
-  </head>
-  
-  <body>
-    <div id="container">
-      <button id="botonCaptura">Tomar foto</button>
-      <script type="module" src="main.js"></script>
-    </div>
-  </body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <!-- 
+  Pantalla de carga 
+  <div id="loading-ui" class="custom-loading-ui hidden">
+    <p>Cargando experiencia AR...</p>
+  </div>
+
+  Pantalla de escaneo 
+  <div id="scanning-ui" class="hidden">
+    <div class="marco"></div>
+    <p>Escaneá la imagen</p>
+  </div>
+  -->
+
+  <!-- Canva -->
+  <div id="container">
+    <button id="botonCaptura">Tomar foto</button>
+  </div>
+  <script type="module" src="main.js"></script>
+</body>
 </html>
