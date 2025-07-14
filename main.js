@@ -5,8 +5,8 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 const mindarThree = new MindARThree({
     container: document.querySelector("#container"),
         imageTargetSrc: "https://cdn.glitch.global/65e71ed9-5bd3-4f28-832d-b9b8da88b976/targets.mind?v=1748745952253",
-        filterMinCF: 0.0001,
-        filterBeta: 1000,
+        filterMinCF: 0.09,
+        filterBeta: 900,
         warmupTolerance: 5,
         missTolerance: 5,
     });
@@ -22,7 +22,7 @@ const loader = new GLTFLoader();
 loader.load("https://cdn.glitch.global/65e71ed9-5bd3-4f28-832d-b9b8da88b976/david.glb?v=1748919016066",
     (gltf) => {
         const model = gltf.scene;
-        model.scale.set(0.25, 0.25, 0.25);
+        model.scale.set(0.5, 0.5, 0.5);
         model.rotation.set(THREE.MathUtils.degToRad(90), 0, 0);
         model.position.set(0, 0, 0.1);
         anchor.group.add(model);      
