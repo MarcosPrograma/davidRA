@@ -6,7 +6,7 @@ const mindarThree = new MindARThree({
     container: document.querySelector("#container"),
         imageTargetSrc: "https://cdn.glitch.global/65e71ed9-5bd3-4f28-832d-b9b8da88b976/targets.mind?v=1748745952253",
         filterMinCF: 0.0001,
-        filterBeta: 5,
+        filterBeta: 1000,
         warmupTolerance: 5,
         missTolerance: 5,
     });
