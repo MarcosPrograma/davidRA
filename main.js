@@ -7,8 +7,8 @@ const mindarThree = new MindARThree({
     container: document.querySelector("#container"),
         imageTargetSrc: "https://cdn.glitch.global/65e71ed9-5bd3-4f28-832d-b9b8da88b976/targets.mind?v=1748745952253",
         filterMinCF: 0.0001, //controlar la suavidad: valor bajo > mas suavidad y menos vibración  
-        filterBeta: 1000, //ajustar como responde el filtro a cambios rapidos: alto valor > respuesta rapida y menos delay 
-        warmupTolerance: 8, //espera 8 frames antes de activar el modelo  
+        filterBeta: 5, //ajustar como responde el filtro a cambios rapidos: alto valor > respuesta rapida y menos delay 
+        warmupTolerance: 12, //espera 8 frames antes de activar el modelo  
         missTolerance: 50, //tolerancia en el que el modelo se mantiene visible cuando se pierde el target 
         showStats: false
 
@@ -23,7 +23,7 @@ scene.add(light);
 let lastPosition = new THREE.Vector3();
 let lastRotation = new THREE.Euler();
 let lastScale = new THREE.Vector3(1, 1, 1);
-const smoothingFactor = 0.15; //ajustar entre 0.05 (muy suave) y 0.3 (más responsivo)
+const smoothingFactor = 0.05; //ajustar entre 0.05 (muy suave) y 0.3 (más responsivo)
 let isTracking = false;
 let frameCount = 0;
 const stabilizationFrames = 10; //frames adicionales para estabilizar
@@ -51,7 +51,7 @@ loader.load("https://cdn.glitch.global/65e71ed9-5bd3-4f28-832d-b9b8da88b976/davi
             if (child.isMesh) {
                 child.material.matcap = null;
                 child.material.needsUpdate = true;
-                child.frustumCulled = false; // Evitar culling que puede causar flickering
+                child.frustumCulled = false; // evitar culling que puede causar flickering
             }
         });
 
