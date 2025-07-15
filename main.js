@@ -7,7 +7,7 @@ const mindarThree = new MindARThree({
     container: document.querySelector("#container"),
         imageTargetSrc: "https://cdn.glitch.global/65e71ed9-5bd3-4f28-832d-b9b8da88b976/targets.mind?v=1748745952253",
         filterMinCF: 0.0001, //controlar la suavidad: valor bajo > mas suavidad y menos vibración  
-        filterBeta: 25, //ajustar como responde el filtro a cambios rapidos: alto valor > respuesta rapida y menos delay 
+        filterBeta: 1000, //ajustar como responde el filtro a cambios rapidos: alto valor > respuesta rapida y menos delay 
         warmupTolerance: 8, //espera 8 frames antes de activar el modelo  
         missTolerance: 50, //tolerancia en el que el modelo se mantiene visible cuando se pierde el target 
         showStats: false
