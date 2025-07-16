@@ -7,6 +7,9 @@ class uiControl {
     constructor() {
         this.loadingScreen = document.getElementById('loadingScreen');
         this.scanningScreen = document.getElementById('scanningScreen');
+        this.loadingText = document.getElementById('loadingText');
+        this.loadingSubtext = document.getElementById('loadingSubtext');
+        this.targetLostMessage = document.getElementById('targetLostMessage');
     }
 
     //mostrar pantalla de carga
@@ -35,7 +38,7 @@ class uiControl {
     simulateLoading() {
         setTimeout(() => {
             this.hideLoading();
-        }, 2000); //sumula 2 segundos de carga
+        }, 5000); //simula 5 segundos de carga
     }
 
     //métodos para integrar con MindAR
@@ -49,10 +52,12 @@ class uiControl {
 
     onTargetFound() {
         this.hideScanning();
+        this.targetLostMessage.style.display = 'none';
     }
 
     onTargetLost() {
         this.showScanning();
+        this.targetLostMessage.style.display = 'block';
     }
 }
 
@@ -66,7 +71,7 @@ const mindarThree = new MindARThree({
     filterMinCF: 0.0001, //controlar la suavidad: valor bajo > mas suavidad y menos vibración  
     filterBeta: 5, //ajustar como responde el filtro a cambios rapidos: alto valor > respuesta rapida y menos delay 
     warmupTolerance: 12, //espera 8 frames antes de activar el modelo  
-    missTolerance: 50, //tolerancia en el que el modelo se mantiene visible cuando se pierde el target 
+    missTolerance: 25, //tolerancia en el que el modelo se mantiene visible cuando se pierde el target 
     showStats: false,
     uiLoading: false,
     uiScanning: false,
@@ -125,10 +130,11 @@ anchor.onTargetFound = () => {
     console.log("Target encontrado");
     isTracking = true;
     frameCount = 0;
+
     // Asegurarse de que la UI original esté oculta
     const loadingUI = document.querySelector("#loading-ui");
     const scanningUI = document.querySelector("#scanning-ui");
-    
+
     if (loadingUI) loadingUI.classList.add("hidden");
     if (scanningUI) scanningUI.classList.add("hidden");
     uiControlador.onTargetFound();
@@ -140,7 +146,7 @@ anchor.onTargetLost = () => {
     // Mantener la UI original oculta
     const loadingUI = document.querySelector("#loading-ui");
     const scanningUI = document.querySelector("#scanning-ui");
-    
+
     if (loadingUI) loadingUI.classList.add("hidden");
     if (scanningUI) scanningUI.classList.add("hidden");
     uiControlador.onTargetLost();
