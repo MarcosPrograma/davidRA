@@ -58,6 +58,7 @@ export const screenshotButton = (renderer, scene, camera) => {
       return;
     }
 
+    /*
     // Escritorio con Blob + descarga
     captureCanvas.toBlob((blob) => {
       const link = document.createElement("a");
@@ -65,7 +66,7 @@ export const screenshotButton = (renderer, scene, camera) => {
       link.download = `david-ar-${Date.now()}.png`;
       link.click();
       setTimeout(() => URL.revokeObjectURL(link.href), 1000);
-    }, "image/png");
+    }, "image/png"); */
   });
 
   // abrir el panel
