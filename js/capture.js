@@ -1,7 +1,8 @@
 export const screenshotButton = (renderer, scene, camera) => {
-  // Canvas persistente fuera del evento
   const captureCanvas = document.createElement("canvas");
   const captureCtx = captureCanvas.getContext("2d");
+  //detectar iOS (Safari)
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
   document.getElementById("botonCaptura").addEventListener("click", () => {
     const video = document.querySelector("video");
@@ -10,7 +11,7 @@ export const screenshotButton = (renderer, scene, camera) => {
       return;
     }
 
-    // Ajustar tamaño solo si cambió
+    //ajustar tamaño solo si cambió
     const width = renderer.domElement.width;
     const height = renderer.domElement.height;
     if (captureCanvas.width !== width || captureCanvas.height !== height) {
@@ -18,23 +19,36 @@ export const screenshotButton = (renderer, scene, camera) => {
       captureCanvas.height = height;
     }
 
-    // Forzar render actual
+    //forzar render actual
     renderer.render(scene, camera);
 
-    // Dibujar video + WebGL
+    //dibujar video + WebGL
     captureCtx.drawImage(video, 0, 0, width, height);
     captureCtx.drawImage(renderer.domElement, 0, 0, width, height);
 
-    // Generar imagen (más rápido que toBlob y más compatible en iOS)
-    const imageData = captureCanvas.toDataURL("image/png");
-
-    // Descargar
-    const link = document.createElement("a");
-    link.href = imageData;
-    link.download = `david-ar-${Date.now()}.png`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    //iOS (Safari): usar DataURL
+    if (isIOS) {
+      const imageData = captureCanvas.toDataURL("image/png");
+      const link = document.createElement("a");
+      link.href = imageData;
+      link.download = `david-ar-${Date.now()}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } 
+    //resto: usar Blob
+    else {
+      captureCanvas.toBlob((blob) => {
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = `david-ar-${Date.now()}.png`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        //revocar después de un pequeño delay
+        setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+      }, "image/png");
+    }
   });
 
   // abrir el panel
