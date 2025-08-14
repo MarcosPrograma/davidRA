@@ -5,11 +5,17 @@ export const screenshotButton = (renderer, scene, camera) => {
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
   const isAndroid = /Android/i.test(navigator.userAgent);
 
+  let video = null;
+  let link = null;
+
   document.getElementById("botonCaptura").addEventListener("click", () => {
     const video = document.querySelector("video");
     if (!video) {
-      alert("No se encontró el video");
-      return;
+      video = document.querySelector("video");
+      if (!video) {
+        alert("No se encontró el video");
+        return;
+      }
     }
 
     const width = renderer.domElement.width;
@@ -28,12 +34,16 @@ export const screenshotButton = (renderer, scene, camera) => {
     captureCtx.drawImage(video, 0, 0, width, height);
     captureCtx.drawImage(renderer.domElement, 0, 0, width, height);
 
+    const timestamp = Date.now();
+
     //iOS con DataURL
     if (isIOS) {
-      const imageData = captureCanvas.toDataURL("image/png");
-      const link = document.createElement("a");
-      link.href = imageData;
-      link.download = `david-ar-${Date.now()}.png`;
+      if (!link) {
+        link = document.createElement("a");
+        document.body.appendChild(link);
+      }
+      link.href = captureCanvas.toDataURL("image/jpeg", 0.8);
+      link.download = `david-ar-${timestamp}.png`;
       link.click();
       return;
     }
@@ -41,19 +51,21 @@ export const screenshotButton = (renderer, scene, camera) => {
     // Android con Share API
     if (isAndroid && navigator.canShare) {
       captureCanvas.toBlob((blob) => {
-        const file = new File([blob], `david-ar-${Date.now()}.png`, { type: "image/png" });
+        const file = new File([blob], `david-ar-${timestamp}.png`, { type: "image/jpeg" });
         navigator.share({ files: [file], title: "Captura AR" })
           .catch(err => console.warn("Share cancelado:", err));
-      }, "image/png");
+      }, "image/jpeg", 0.8);
       return;
     }
 
     // Android sin Share API con DataURL
     if (isAndroid) {
-      const imageData = captureCanvas.toDataURL("image/png");
-      const link = document.createElement("a");
-      link.href = imageData;
-      link.download = `david-ar-${Date.now()}.png`;
+      if (!link) {
+        link = document.createElement("a");
+        document.body.appendChild(link);
+      }
+      link.href = captureCanvas.toDataURL("image/jpeg", 0.8);
+      link.download = `david-ar-${timestamp}.png`;
       link.click();
       return;
     }
