@@ -81,13 +81,18 @@ export const screenshotButton = (renderer, scene, camera) => {
     }, "image/png"); */
   });
 
-  // abrir el panel
   document.getElementById("info-button").addEventListener("click", () => {
     document.getElementById("info-panel").classList.add("visible");
+    document.getElementById("info-overlay").classList.add("visible");
   });
 
-  // cerrar el panel
   document.getElementById("close-panel").addEventListener("click", () => {
     document.getElementById("info-panel").classList.remove("visible");
+    document.getElementById("info-overlay").classList.remove("visible");
+  });
+
+  document.getElementById("info-overlay").addEventListener("click", () => {
+    document.getElementById("info-panel").classList.remove("visible");
+    document.getElementById("info-overlay").classList.remove("visible");
   });
 };
