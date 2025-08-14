@@ -1,36 +1,44 @@
 export const screenshotButton = (renderer, scene, camera) => {
-  document.getElementById("botonCaptura").addEventListener("click", async () => {
+  const captureCanvas = document.createElement("canvas");
+  const captureCtx = captureCanvas.getContext("2d");
+
+  document.getElementById("botonCaptura").addEventListener("click", () => {
     const video = document.querySelector("video");
     if (!video) {
       alert("No se encontró el video");
       return;
     }
 
-    //forzar renderizado manual antes de captura, por si AnimationLoop termino
-    renderer.render(scene, camera);
-    await new Promise((resolve) => requestAnimationFrame(resolve));
-
-    //esperar un frame
+    //ajustar tamaño
     const width = renderer.domElement.width;
     const height = renderer.domElement.height;
-    const canvas = document.createElement("canvas");
-    canvas.width = width;
-    canvas.height = height;
+    captureCanvas.width = width;
+    captureCanvas.height = height;
 
-    const ctx = canvas.getContext("2d");
+    //forzar render actual
+    renderer.render(scene, camera);
 
-    //dibujar el video de fondo
-    ctx.drawImage(video, 0, 0, width, height);
-
-    //dibujar el canvas de WebGL con el modelo 3D renderizado
-    ctx.drawImage(renderer.domElement, 0, 0, width, height);
+    //dibujar video
+    captureCtx.drawImage(video, 0, 0, width, height);
+    captureCtx.drawImage(renderer.domElement, 0, 0, width, height);
 
     //descargar
-    canvas.toBlob((blob) => {
+    captureCanvas.toBlob((blob) => {
       const link = document.createElement("a");
       link.href = URL.createObjectURL(blob);
-      link.download = "david-ar.png";
+      link.download = `david-ar-${Date.now()}.png`;
       link.click();
+      URL.revokeObjectURL(link.href); // evitar fugas
     }, "image/png");
+  });
+
+  // abrir el panel
+  document.getElementById("info-button").addEventListener("click", () => {
+    document.getElementById("info-panel").classList.add("visible");
+  });
+
+  // cerrar el panel
+  document.getElementById("close-panel").addEventListener("click", () => {
+    document.getElementById("info-panel").classList.remove("visible");
   });
 };

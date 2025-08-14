@@ -13,6 +13,7 @@
     </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="src/favicon.ico">
 </head>
 
 <body>
@@ -28,6 +29,29 @@
       <div class="loading-subtext" id="loadingSubtext">Hecho en la Universidad Pública ♥ </div>
     </div>
 
+    <!-- Panel -->
+    <div id="info-panel" class="hidden">
+      <div class="panel-header">
+        <h2>Cabeza del David</h2>
+        <span id="close-panel">X</span>
+      </div>
+      <h4>Calco en Yeso<br>
+        120cm x 75cm x 43cm<br>
+        Hall, Planta Baja, Facultad de Artes (UNLP)<br>
+        Autor o taller desconocido</h4>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum non tellus diam. Maecenas a accumsan dui,
+        viverra pretium nunc. Vivamus a rhoncus urna. Etiam tincidunt egestas lacus, sed semper orci pharetra a.
+        Phasellus consequat eget lacus sit amet sagittis. Aenean sit amet quam laoreet, ullamcorper odio in, egestas
+        libero. Sed id turpis auctor, porta augue et, pharetra nisi. Ut ut efficitur sapien. Sed rhoncus nulla vitae
+        urna ultrices sagittis. In eget lacus ultricies, vulputate massa quis, sagittis nibh.
+      </p>
+      <p>
+        Aliquam ut imperdiet velit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas turpis dui,
+        feugiat sed augue nec, ornare blandit enim.
+      </p>
+    </div>
+
     <!-- Escaneo -->
     <div class="scanning-screen" id="scanningScreen">
       <div class="scanning-frame">
@@ -39,6 +63,16 @@
       </div>
       <div class="scanning-text">Apunta hacia el target</div>
       <div class="target-lost-message" id="targetLostMessage">¡Has perdido el target!</div>
+    </div>
+
+    <!-- Logo -->
+    <a href="https://www2.fba.unlp.edu.ar/areamuseo/" target="_blank" id="logo-link">
+      <img src="src/logo.png" alt="Logo">
+    </a>
+
+    <!-- Info -->
+    <div id="info-button">
+      <img src="src/logo.png" alt="Info">
     </div>
 
     <!-- Tomar captura -->

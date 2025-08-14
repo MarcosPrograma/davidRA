@@ -79,10 +79,14 @@ anchor.onTargetFound = () => {
     isTracking = true;
 
     if (!animationPlayed && actions.length > 0) {
-        actions.forEach(action => {
-            action.reset().play(); // Todas arrancan juntas
-        });
-        animationPlayed = true;
+        setTimeout(() => {
+            if (isTracking) {
+                actions.forEach(action => {
+                    action.reset().play(); // arrrancan todas juntas
+                });
+                animationPlayed = true;
+            }
+        }, 3000);
     }
 
     // Asegurarse de que la UI original esté oculta

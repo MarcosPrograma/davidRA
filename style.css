@@ -5,6 +5,7 @@ body {
   padding: 0;
   font-family: "Montserrat", sans-serif;
   font-style: normal;
+  user-select: none
 }
 
 #container {
@@ -19,6 +20,65 @@ body {
   top: 0;
   left: 0;
   z-index: 2;
+}
+
+/* logo */
+#logo-link {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 1999;
+}
+#logo-link img {
+  width: 3rem;
+  height: auto;
+  cursor: pointer;
+}
+
+/* icono-info */
+#info-button {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1999;
+  cursor: pointer;
+}
+#info-button img {
+  width: 3rem;
+  height: auto;
+}
+
+/* Panel de información */
+#info-panel {
+  position: fixed;
+  top: 50%;
+  right: 50%;
+  transform: translate(50%, -50%);
+  width: 80%;
+  max-width: 400px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 15px;
+  padding: 20px;
+  z-index: 1999;
+  color: white;
+  display: none;
+}
+#info-panel.visible {
+  display: block;
+}
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.panel-header h2 {
+  margin: 0;
+}
+#close-panel {
+  cursor: pointer;
+  font-size: 24px;
 }
 
 /*Boton para tomar una fotografía*/
