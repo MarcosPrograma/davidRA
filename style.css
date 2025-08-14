@@ -5,7 +5,8 @@ body {
   padding: 0;
   font-family: "Montserrat", sans-serif;
   font-style: normal;
-  user-select: none
+  user-select: none;
+  overflow: hidden;
 }
 
 #container {
@@ -91,7 +92,7 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 15px;
   padding: 20px;
-  z-index: 1999;
+  z-index: 2001;
   color: white;
   display: none;
   line-height: 24px;
