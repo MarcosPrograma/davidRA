@@ -3,6 +3,7 @@ export const screenshotButton = (renderer, scene, camera) => {
   const captureCtx = captureCanvas.getContext("2d");
   //detectar iOS (Safari)
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  const isAndroid = /Android/i.test(navigator.userAgent);
 
   document.getElementById("botonCaptura").addEventListener("click", () => {
     const video = document.querySelector("video");
@@ -23,32 +24,35 @@ export const screenshotButton = (renderer, scene, camera) => {
     renderer.render(scene, camera);
 
     //dibujar video + WebGL
-    captureCtx.drawImage(video, 0, 0, width, height);
-    captureCtx.drawImage(renderer.domElement, 0, 0, width, height);
+    requestAnimationFrame(() => {
+      renderer.render(scene, camera);
+      captureCtx.drawImage(video, 0, 0, width, height);
+      captureCtx.drawImage(renderer.domElement, 0, 0, width, height);
 
-    //iOS (Safari): usar DataURL
-    if (isIOS) {
-      const imageData = captureCanvas.toDataURL("image/png");
-      const link = document.createElement("a");
-      link.href = imageData;
-      link.download = `david-ar-${Date.now()}.png`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } 
-    //resto: usar Blob
-    else {
-      captureCanvas.toBlob((blob) => {
+      //iOS (Safari): usar DataURL
+      if (isIOS) {
+        const imageData = captureCanvas.toDataURL("image/png");
         const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
+        link.href = imageData;
         link.download = `david-ar-${Date.now()}.png`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-        //revocar después de un pequeño delay
-        setTimeout(() => URL.revokeObjectURL(link.href), 1000);
-      }, "image/png");
-    }
+      }
+      //resto: usar Blob
+      else {
+        captureCanvas.toBlob((blob) => {
+          const link = document.createElement("a");
+          link.href = URL.createObjectURL(blob);
+          link.download = `david-ar-${Date.now()}.png`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          //revocar después de un pequeño delay
+          setTimeout(() => URL.revokeObjectURL(link.href), 1500);
+        }, "image/png");
+      }
+    });
   });
 
   // abrir el panel
