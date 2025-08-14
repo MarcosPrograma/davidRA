@@ -1,4 +1,5 @@
 export const screenshotButton = (renderer, scene, camera) => {
+  // Canvas persistente fuera del evento
   const captureCanvas = document.createElement("canvas");
   const captureCtx = captureCanvas.getContext("2d");
 
@@ -9,27 +10,31 @@ export const screenshotButton = (renderer, scene, camera) => {
       return;
     }
 
-    //ajustar tamaño
+    // Ajustar tamaño solo si cambió
     const width = renderer.domElement.width;
     const height = renderer.domElement.height;
-    captureCanvas.width = width;
-    captureCanvas.height = height;
+    if (captureCanvas.width !== width || captureCanvas.height !== height) {
+      captureCanvas.width = width;
+      captureCanvas.height = height;
+    }
 
-    //forzar render actual
+    // Forzar render actual
     renderer.render(scene, camera);
 
-    //dibujar video
+    // Dibujar video + WebGL
     captureCtx.drawImage(video, 0, 0, width, height);
     captureCtx.drawImage(renderer.domElement, 0, 0, width, height);
 
-    //descargar
-    captureCanvas.toBlob((blob) => {
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = `david-ar-${Date.now()}.png`;
-      link.click();
-      URL.revokeObjectURL(link.href); // evitar fugas
-    }, "image/png");
+    // Generar imagen (más rápido que toBlob y más compatible en iOS)
+    const imageData = captureCanvas.toDataURL("image/png");
+
+    // Descargar
+    const link = document.createElement("a");
+    link.href = imageData;
+    link.download = `david-ar-${Date.now()}.png`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   });
 
   // abrir el panel

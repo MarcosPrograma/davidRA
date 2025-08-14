@@ -102,6 +102,11 @@ export class SmoothTracker {
         const deltaTime = (currentTime - this.lastFrameTime) / 1000;
         this.lastFrameTime = currentTime;
 
+        // móvil con poca luz, aumentar suavizado
+        if (deltaTime > 0.05) { // más de 50ms/frame
+            this.smoothingFactor = Math.min(this.smoothingFactor * 1.2, this.maxSmoothingFactor);
+        }
+
         if (deltaTime > 0) {
             //calcular velocidad de posición
             const posVelocity = currentPos.clone().sub(this.lastPosition).divideScalar(deltaTime);
@@ -164,6 +169,9 @@ export class SmoothTracker {
         //detectar movimiento brusco
         if (this.isMovementTooAbrupt(anchorPos, anchorRot, anchorScale)) {
             console.log("Movimiento brusco detectado - aplicando suavizado extra");
+            if (/Mobi|Android/i.test(navigator.userAgent)) {
+                return;
+            }
             //usar el último valor válido o promedio del buffer
             const averaged = this.getAverageFromBuffer();
             if (averaged) {

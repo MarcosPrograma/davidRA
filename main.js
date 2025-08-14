@@ -14,17 +14,20 @@ ui.startLoadingSequence();;
 const mindarThree = new MindARThree({
     container: document.querySelector("#container"),
     imageTargetSrc: "src/targets.mind",
-    filterMinCF: 0.0001, //controlar la suavidad: valor bajo > mas suavidad y menos vibración  
-    filterBeta: 20, //ajustar como responde el filtro a cambios rapidos: alto valor > respuesta rapida y menos delay 
-    warmupTolerance: 12, //espera 8 frames antes de activar el modelo  
-    missTolerance: 15, //tolerancia en el que el modelo se mantiene visible cuando se pierde el target 
+    filterMinCF: 0.0005, //controlar la suavidad: valor bajo > mas suavidad y menos vibración  
+    filterBeta: 15, //ajustar como responde el filtro a cambios rapidos: alto valor > respuesta rapida y menos delay 
+    warmupTolerance: 15, //espera 8 frames antes de activar el modelo  
+    missTolerance: 5, //tolerancia en el que el modelo se mantiene visible cuando se pierde el target 
     showStats: false,
     uiLoading: false,
     uiScanning: false,
 });
 
 const { renderer, scene, camera } = mindarThree;
-scene.add(new THREE.HemisphereLight(0xbfbfbf, 0xffffff, 2.5));
+scene.add(new THREE.HemisphereLight(0xffffff, 0x666666, 0.6));
+const mainLight = new THREE.DirectionalLight(0xffffff, 1.0);
+mainLight.position.set(3, 8, 5);
+scene.add(mainLight);
 
 //cargar modelo GLTF
 const anchor = mindarThree.addAnchor(0);
@@ -73,10 +76,28 @@ loader.load("src/davidAnimated.glb", (gltf) => {
     tracker.lastScale.copy(modelGroup.scale);
 });
 
+//Si detectamos que estamos en móvil, usa parámetros más suaves y buffers más grandes
+if (/Mobi|Android/i.test(navigator.userAgent)) {
+    tracker.setSensitivity('low'); // suavizado más agresivo
+    tracker.bufferSize = 8;        // más frames de promedio
+    tracker.predictionStrength = 0.05; // menos predicción, más suavidad
+}
+
 //eventos de tracking
 anchor.onTargetFound = () => {
     console.log("Target encontrado");
     isTracking = true;
+
+    fadeOut = false;
+    modelGroup.visible = true;
+
+    // restaurar tamaño y opacidad
+    modelGroup.traverse(child => {
+        if (child.isMesh) {
+            child.material.opacity = 1;
+            child.material.transparent = false;
+        }
+    });
 
     if (!animationPlayed && actions.length > 0) {
         setTimeout(() => {
@@ -96,9 +117,16 @@ anchor.onTargetFound = () => {
     ui.onTargetFound();
 };
 
+let fadeOut = false;
+let fadeStartTime = 0;
+
 anchor.onTargetLost = () => {
     console.log("Target perdido");
     isTracking = false;
+
+    // animación de salida (fade + scale)
+    fadeOut = true;
+    fadeStartTime = performance.now();
 
     // Mantener la UI original oculta
     document.querySelector("#loading-ui")?.classList.add("hidden");
@@ -125,6 +153,28 @@ const start = async () => {
     renderer.setAnimationLoop(() => {
         const delta = clock.getDelta();
         if (mixer) mixer.update(delta);
+
+        // si está en fade out
+        if (fadeOut) {
+            const elapsed = (performance.now() - fadeStartTime) / 1000; // seg
+            const fadeDuration = 0.5; // medio segundo
+            // progresivo 1 → 0
+            const alpha = Math.max(0, 1 - elapsed / fadeDuration);
+
+            modelGroup.traverse(child => {
+                if (child.isMesh) {
+                    child.material.transparent = true;
+                    child.material.opacity = alpha;
+                }
+            });
+
+            if (alpha <= 0) {
+                fadeOut = false;
+                // oculta realmente el modelo
+                modelGroup.visible = false;
+            }
+        }
+
         tracker.smoothTransform(modelGroup, anchor.group);
         renderer.render(scene, camera);
     });
