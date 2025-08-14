@@ -29,8 +29,8 @@ export const screenshotButton = (renderer, scene, camera) => {
       captureCtx.drawImage(video, 0, 0, width, height);
       captureCtx.drawImage(renderer.domElement, 0, 0, width, height);
 
-      //iOS (Safari): usar DataURL
-      if (isIOS) {
+      //iOS (Safari) o Android: usar DataURL
+      if (isIOS || isAndroid) {
         const imageData = captureCanvas.toDataURL("image/png");
         const link = document.createElement("a");
         link.href = imageData;
