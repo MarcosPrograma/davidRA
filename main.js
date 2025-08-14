@@ -24,16 +24,20 @@ const mindarThree = new MindARThree({
 });
 
 const { renderer, scene, camera } = mindarThree;
-scene.add(new THREE.HemisphereLight(0xffffff, 0xbbbbff, 3));
+scene.add(new THREE.HemisphereLight(0xbfbfbf, 0xffffff, 2.5));
 
 //cargar modelo GLTF
 const anchor = mindarThree.addAnchor(0);
 const loader = new GLTFLoader();
 
 let modelGroup = new THREE.Group();
+let mixer = null; // para animaciones
+let actions = [];
+let currentActionIndex = 0;
+let animationPlayed = false; // para asegurarnos que solo se ejecute una vez
 let isTracking = false;
 
-loader.load("src/david.glb", (gltf) => {
+loader.load("src/davidAnimated.glb", (gltf) => {
     const model = gltf.scene;
 
     model.scale.set(0.5, 0.5, 0.5);
@@ -51,6 +55,18 @@ loader.load("src/david.glb", (gltf) => {
     modelGroup.add(model);
     anchor.group.add(modelGroup);
 
+    // Crear mixer y almacenar TODAS las animaciones
+    if (gltf.animations.length > 0) {
+        mixer = new THREE.AnimationMixer(model);
+
+        actions = gltf.animations.map((clip) => {
+            const action = mixer.clipAction(clip);
+            action.setLoop(THREE.LoopOnce);
+            action.clampWhenFinished = true;
+            return action;
+        });
+    }
+
     //inicializar tracking del modelo
     tracker.lastPosition.copy(modelGroup.position);
     tracker.lastRotation.copy(modelGroup.rotation);
@@ -61,6 +77,13 @@ loader.load("src/david.glb", (gltf) => {
 anchor.onTargetFound = () => {
     console.log("Target encontrado");
     isTracking = true;
+
+    if (!animationPlayed && actions.length > 0) {
+        actions.forEach(action => {
+            action.reset().play(); // Todas arrancan juntas
+        });
+        animationPlayed = true;
+    }
 
     // Asegurarse de que la UI original esté oculta
     document.querySelector("#loading-ui")?.classList.add("hidden");
@@ -90,13 +113,17 @@ screenshotButton(renderer, scene, camera);
 
 //iniciar AR
 const start = async () => {
-  await mindarThree.start();
-  ui.onARReady();
+    await mindarThree.start();
+    ui.onARReady();
 
-  renderer.setAnimationLoop(() => {
-    tracker.smoothTransform(modelGroup, anchor.group);
-    renderer.render(scene, camera);
-  });
+    const clock = new THREE.Clock();
+
+    renderer.setAnimationLoop(() => {
+        const delta = clock.getDelta();
+        if (mixer) mixer.update(delta);
+        tracker.smoothTransform(modelGroup, anchor.group);
+        renderer.render(scene, camera);
+    });
 };
 
 start();
