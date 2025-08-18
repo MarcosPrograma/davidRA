@@ -32,8 +32,16 @@ export class UIControl {
 
     simulateLoading() {
         setTimeout(() => {
+            this.loadingSubtext.textContent = "Al tomar la captura, puede tardar un momento";
+        }, 1000); // cambia a los 1 segundos
+
+        setTimeout(() => {
+            this.loadingSubtext.textContent = "Hecho en la Universidad Pública ♥";
+        }, 2000); // cambia a los 2 segundos
+
+        setTimeout(() => {
             this.hideLoading();
-        }, 5000); //simula 5 segundos de carga
+        }, 6000); // oculta la pantalla a los 5 segundos
     }
 
     //métodos para integrar con MindAR

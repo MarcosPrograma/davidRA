@@ -24,10 +24,27 @@ const mindarThree = new MindARThree({
 });
 
 const { renderer, scene, camera } = mindarThree;
-scene.add(new THREE.HemisphereLight(0xffffff, 0x666666, 0.6));
-const mainLight = new THREE.DirectionalLight(0xffffff, 1.0);
-mainLight.position.set(3, 8, 5);
-scene.add(mainLight);
+
+// Luz ambiental suave con un toque cálido (simula rebote en paredes)
+const ambient = new THREE.AmbientLight(0xf5f5f5, 0.35); 
+scene.add(ambient);
+
+// Luz direccional principal (ligeramente cálida, como un foco de museo)
+const keyLight = new THREE.DirectionalLight(0xfff8e7, 1.1); 
+keyLight.position.set(3, 8, 5);
+keyLight.castShadow = true;
+keyLight.shadow.bias = -0.0001;
+scene.add(keyLight);
+
+// Luz de relleno fría, más tenue (equilibra el contraste, simula desgaste)
+const fillLight = new THREE.DirectionalLight(0xe0e0e0, 0.35);
+fillLight.position.set(-4, 3, 6);
+scene.add(fillLight);
+
+// Luz trasera con tono neutro para resaltar bordes sin brillar demasiado
+const backLight = new THREE.DirectionalLight(0xfafafa, 0.5);
+backLight.position.set(0, 5, -4);
+scene.add(backLight);
 
 //cargar modelo GLTF
 const anchor = mindarThree.addAnchor(0);
@@ -44,8 +61,8 @@ loader.load("src/davidAnimated.glb", (gltf) => {
     const model = gltf.scene;
 
     model.scale.set(0.5, 0.5, 0.5);
-    model.rotation.set(THREE.MathUtils.degToRad(90), 0, 0);
-    model.position.set(0, 0, 0.1);
+    model.rotation.set(Math.PI / 2, 0, 0); //Three usa radianes, no grados 
+    model.position.set(0, 0, 0);
 
     model.traverse((child) => {
         if (child.isMesh) {
