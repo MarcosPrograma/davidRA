@@ -125,6 +125,10 @@ body {
   margin-bottom: 30px;
 }
 
+#p-espacio{
+  padding-bottom: 60px;
+}
+
 /*Boton para tomar una fotografía*/
 
 #botonCaptura {
