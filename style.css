@@ -104,7 +104,7 @@ body {
 #info-panel::after {
   content: "";
   display: block;
-  height: 4rem;
+  height: 3rem;
 }
 
 .panel-header {
@@ -132,6 +132,10 @@ body {
 
 #info-panel p {
   margin-bottom: 30px;
+}
+
+#creditos{
+    font-size: 14px;
 }
 
 /*Boton para tomar una fotografía*/
