@@ -23,26 +23,27 @@ const mindarThree = new MindARThree({
     uiScanning: false,
 });
 
+
 const { renderer, scene, camera } = mindarThree;
 
 // Luz ambiental suave con un toque cálido (simula rebote en paredes)
-const ambient = new THREE.AmbientLight(0xf5f5f5, 0.35); 
+const ambient = new THREE.AmbientLight(0xf5f5f5, 0.5); 
 scene.add(ambient);
 
 // Luz direccional principal (ligeramente cálida, como un foco de museo)
-const keyLight = new THREE.DirectionalLight(0xfff8e7, 1.1); 
+const keyLight = new THREE.DirectionalLight(0xfff8e7, 2); 
 keyLight.position.set(3, 8, 5);
 keyLight.castShadow = true;
 keyLight.shadow.bias = -0.0001;
 scene.add(keyLight);
 
 // Luz de relleno fría, más tenue (equilibra el contraste, simula desgaste)
-const fillLight = new THREE.DirectionalLight(0xe0e0e0, 0.35);
+const fillLight = new THREE.DirectionalLight(0xe0e0e0, 0.5);
 fillLight.position.set(-4, 3, 6);
 scene.add(fillLight);
 
 // Luz trasera con tono neutro para resaltar bordes sin brillar demasiado
-const backLight = new THREE.DirectionalLight(0xfafafa, 0.5);
+const backLight = new THREE.DirectionalLight(0xfafafa, 0.35);
 backLight.position.set(0, 5, -4);
 scene.add(backLight);
 
@@ -175,7 +176,7 @@ const start = async () => {
         if (fadeOut) {
             const elapsed = (performance.now() - fadeStartTime) / 1000; // seg
             const fadeDuration = 0.5; // medio segundo
-            // progresivo 1 → 0
+            // progresivo 1 -> 0
             const alpha = Math.max(0, 1 - elapsed / fadeDuration);
 
             modelGroup.traverse(child => {
