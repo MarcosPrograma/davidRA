@@ -61,7 +61,7 @@ let isTracking = false;
 loader.load("src/davidAnimated.glb", (gltf) => {
     const model = gltf.scene;
 
-    model.scale.set(0.25, 0.25, 0.25);
+    model.scale.set(0.2, 0.2, 0.2);
     model.rotation.set(Math.PI / 2, 0, 0); //Three usa radianes, no grados 
     model.position.set(0, 0, 0);
     model.position.x += 0.25;
@@ -201,3 +201,4 @@ const start = async () => {
 
 
 start();
+
